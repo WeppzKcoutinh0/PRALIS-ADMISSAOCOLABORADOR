@@ -1,0 +1,12 @@
+# Configuracao minima para uso com a Supabase CLI (supabase init/link/db push).
+# Substitua project_id pelo ID do seu projeto Supabase (veja em Project Settings).
+project_id = "pralis-portal-admissao"
+
+[api]
+enabled = true
+
+[db]
+port = 54322
+
+[functions.public-application]
+verify_jwt = false

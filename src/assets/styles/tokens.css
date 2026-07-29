@@ -1,0 +1,82 @@
+/*
+  Design tokens da Pralis.
+  Cores extraidas oficialmente do arquivo
+  01-Logotipo_Final/RGB/PNG (Web)/..._17-Paleta-de-Cores.png e do manual da marca.
+    Dourado/Bege .... #B3810B
+    Laranja ......... #EE7435
+    Bordo ........... #5E3731
+    Branco .......... #FFFFFF
+    Preto ........... #000000
+  As demais variacoes (dark/light, superficies, textos) foram derivadas com
+  cuidado a partir dessas cores oficiais para garantir contraste acessivel.
+*/
+
+:root {
+  /* Cores da marca */
+  --pralis-primary: #EE7435;
+  --pralis-primary-dark: #C6591F;
+  --pralis-primary-light: #F7B489;
+  --pralis-primary-tint: #FDEEE2;
+
+  --pralis-secondary: #B3810B;
+  --pralis-secondary-dark: #8C650A;
+  --pralis-secondary-light: #E4C878;
+
+  --pralis-accent: #5E3731;
+  --pralis-accent-dark: #402521;
+  --pralis-accent-light: #8B615A;
+
+  /* Superficies e fundo */
+  --pralis-background: #FFF8F1;
+  --pralis-surface: #FFFFFF;
+  --pralis-surface-alt: #FBEFE0;
+
+  /* Texto */
+  --pralis-text-primary: #34211C;
+  --pralis-text-secondary: #75625C;
+  --pralis-text-muted: #9C8A83;
+  --pralis-text-on-primary: #FFFFFF;
+  --pralis-text-on-accent: #FFFFFF;
+
+  /* Bordas e foco */
+  --pralis-border: #EADACB;
+  --pralis-border-strong: #D8C2AC;
+  --pralis-focus: #C6591F;
+
+  /* Estados */
+  --pralis-success: #067647;
+  --pralis-success-tint: #E7F6EE;
+  --pralis-warning: #B36B00;
+  --pralis-warning-tint: #FCF0DC;
+  --pralis-danger: #B42318;
+  --pralis-danger-tint: #FBEAE8;
+
+  /* Tipografia */
+  --pralis-font-primary: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --pralis-font-display: 'MADE Dillan', 'Montserrat', system-ui, sans-serif;
+
+  /* Raios */
+  --pralis-radius-sm: 8px;
+  --pralis-radius-md: 14px;
+  --pralis-radius-lg: 24px;
+  --pralis-radius-pill: 999px;
+
+  /* Sombras (tons quentes, coerentes com a marca) */
+  --pralis-shadow-sm: 0 1px 2px rgba(52, 33, 28, 0.08), 0 1px 1px rgba(52, 33, 28, 0.05);
+  --pralis-shadow-md: 0 8px 24px rgba(52, 33, 28, 0.12);
+  --pralis-shadow-lg: 0 16px 40px rgba(52, 33, 28, 0.16);
+
+  /* Espacamentos */
+  --pralis-space-1: 4px;
+  --pralis-space-2: 8px;
+  --pralis-space-3: 12px;
+  --pralis-space-4: 16px;
+  --pralis-space-5: 24px;
+  --pralis-space-6: 32px;
+  --pralis-space-7: 48px;
+  --pralis-space-8: 64px;
+
+  /* Layout */
+  --pralis-max-width: 720px;
+  --pralis-header-height: 64px;
+}

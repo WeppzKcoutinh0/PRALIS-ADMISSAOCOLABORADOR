@@ -1,0 +1,50 @@
+/*
+  Fontes oficiais da identidade visual da Pralis.
+  Montserrat: fonte de apoio (SIL Open Font License), usada em todo o texto de
+  interface por ser altamente legivel em formularios e telas pequenas.
+  MADE Dillan: fonte de exibicao usada no logotipo. Aplicada apenas em titulos
+  de destaque, com peso moderado, para nao comprometer a leitura.
+  IMPORTANT: confirmar com o time de marca a licenca de uso web da fonte
+  MADE Dillan antes de publicar em producao. Os arquivos aqui foram gerados a
+  partir dos originais enviados na pasta de identidade visual.
+*/
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../fonts/montserrat-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../fonts/montserrat-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../fonts/montserrat-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../fonts/montserrat-extrabold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MADE Dillan';
+  src: url('../fonts/made-dillan.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
