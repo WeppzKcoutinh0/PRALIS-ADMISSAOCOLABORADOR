@@ -29,6 +29,13 @@ const BUCKET = 'employee-documents'
 const TOKEN_TTL_DAYS = 30
 const PRIVACY_NOTICE_VERSION = '2026-01'
 
+// Sincronizacao best-effort com uma planilha do Google (via Apps Script Web
+// App). Se as variaveis nao estiverem configuradas, a sincronizacao e
+// simplesmente ignorada — o cadastro no Supabase continua sendo a fonte
+// oficial de dados.
+const SHEETS_WEBHOOK_URL = Deno.env.get('GOOGLE_SHEETS_WEBHOOK_URL')
+const SHEETS_WEBHOOK_SECRET = Deno.env.get('GOOGLE_SHEETS_WEBHOOK_SECRET')
+
 // Ajuste para o dominio do seu frontend em producao.
 const ALLOWED_ORIGIN = Deno.env.get('ALLOWED_ORIGIN') ?? '*'
 
@@ -371,6 +378,72 @@ const REQUIRED_FIELDS = [
   'mother_name'
 ] as const
 
+interface AddressRow {
+  postal_code: string | null
+  street: string | null
+  address_number: string | null
+  complement: string | null
+  district: string | null
+  city: string | null
+  state: string | null
+}
+
+function formatCpfForSheet(cpf: string | null | undefined): string {
+  const digits = (cpf ?? '').replace(/\D/g, '')
+  if (digits.length !== 11) return cpf ?? ''
+  return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9, 11)}`
+}
+
+function formatDateForSheet(isoDate: string | null | undefined): string {
+  if (!isoDate) return ''
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(isoDate)
+  if (!match) return isoDate
+  const [, yyyy, mm, dd] = match
+  return `${dd}/${mm}/${yyyy}`
+}
+
+async function syncToGoogleSheets(app: AppRow, address: AddressRow | null): Promise<void> {
+  if (!SHEETS_WEBHOOK_URL) return
+
+  try {
+    // O Apps Script Web App responde com um redirect 302 para
+    // script.googleusercontent.com contendo o resultado ja processado.
+    // Seguimos esse redirect manualmente (em vez de deixar o fetch seguir
+    // sozinho) porque o comportamento automatico de troca de metodo
+    // (POST -> GET) se mostrou inconsistente em testes.
+    const firstHop = await fetch(SHEETS_WEBHOOK_URL, {
+      method: 'POST',
+      redirect: 'manual',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        secret: SHEETS_WEBHOOK_SECRET,
+        protocolNumber: app.protocol_number,
+        fullName: app.full_name,
+        cpf: formatCpfForSheet(app.cpf),
+        birthDate: formatDateForSheet(app.birth_date),
+        mobilePhone: app.mobile_phone,
+        email: app.email,
+        postalCode: address?.postal_code ?? '',
+        street: address?.street ?? '',
+        addressNumber: address?.address_number ?? '',
+        addressComplement: address?.complement ?? '',
+        district: address?.district ?? '',
+        city: address?.city ?? '',
+        state: address?.state ?? ''
+      })
+    })
+
+    const redirectLocation = firstHop.headers.get('location')
+    if (redirectLocation) {
+      await fetch(redirectLocation)
+    }
+  } catch (err) {
+    // Nao deixamos uma falha na planilha bloquear o envio do cadastro —
+    // o Supabase continua sendo a fonte oficial de dados.
+    console.error('google sheets sync error', err)
+  }
+}
+
 async function handleSubmit(token: string): Promise<Response> {
   const app = await findApplicationByToken(token)
   if (!app) return errorResponse('Cadastro não encontrado ou link expirado.', 404)
@@ -422,6 +495,8 @@ async function handleSubmit(token: string): Promise<Response> {
     changed_by: null,
     change_reason: 'Enviado pelo colaborador — encaminhado automaticamente para análise do DP'
   })
+
+  await syncToGoogleSheets(app, address)
 
   return json({ protocolNumber: app.protocol_number })
 }

@@ -13,6 +13,7 @@ import { getApplicationById, changeApplicationStatus } from '@/services/applicat
 import { listDocumentsForApplication } from '@/services/documents/documentsService'
 import { useDpInternalForm } from '@/composables/useDpInternalForm'
 import { useAuth } from '@/composables/useAuth'
+import { supabase } from '@/services/supabase/client'
 import type { EmployeeApplication } from '@/types/employee'
 import type { EmployeeDocument } from '@/types/documents'
 
@@ -70,6 +71,15 @@ async function handleConfirmFinalize() {
     if (currentStatus === 'dp_review') {
       await changeApplicationStatus(props.id, 'completed', currentStatus, userId.value)
     }
+
+    // Sincroniza os dados internos com a planilha em segundo plano (melhor
+    // esforco — a chamada ao Google pode levar alguns segundos, entao nao
+    // fazemos o DP esperar por ela; e se falhar, nao impede o fluxo, ja que
+    // o Supabase continua sendo a fonte oficial de dados).
+    supabase.functions.invoke('dp-internal-sync', { body: { applicationId: props.id } }).catch((err) => {
+      console.error('dp-internal-sync invoke error', err)
+    })
+
     router.push({ name: 'dp-application-detail', params: { id: props.id } })
   }
 }

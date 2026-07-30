@@ -20,7 +20,7 @@ async function openDocument(doc: EmployeeDocument) {
   try {
     const url = await getSignedDocumentUrl(doc.storagePath)
     window.open(url, '_blank', 'noopener')
-  } catch (err) {
+  } catch {
     openError.value = 'Não foi possível abrir o documento agora.'
   } finally {
     openingDocId.value = null

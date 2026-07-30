@@ -9,7 +9,7 @@ const totalPages = computed(() => Math.max(1, Math.ceil(props.total / props.page
 </script>
 
 <template>
-  <div class="pagination" v-if="total > 0">
+  <div v-if="total > 0" class="pagination">
     <span class="pagination__info">
       Página {{ page }} de {{ totalPages }} · {{ total }} {{ total === 1 ? 'cadastro' : 'cadastros' }}
     </span>
